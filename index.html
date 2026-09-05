@@ -65,7 +65,7 @@
     flex-direction:column;
     overflow:hidden;
     background:
-      radial-gradient(58% 30% at 78% 15%, rgba(255,246,220,.16) 0%, rgba(255,246,220,0) 62%),
+      radial-gradient(56% 28% at 82% 27%, rgba(255,246,220,.16) 0%, rgba(255,246,220,0) 62%),
       radial-gradient(120% 54% at 50% 102%, rgba(255,176,31,calc(.10 + var(--frescura) * .20)) 0%, rgba(255,176,31,0) 60%),
       linear-gradient(179deg, #04071A 0%, var(--noche) 22%, var(--noche-2) 48%, var(--indigo) 76%, var(--horizonte) 100%);
     transition:background 1.2s ease;
@@ -86,8 +86,8 @@
   @keyframes titilar{from{opacity:.12;transform:scale(.7)}to{opacity:.95;transform:scale(1)}}
 
   .luna{
-    position:absolute;top:7%;right:13%;
-    width:min(26vw,96px);aspect-ratio:1;border-radius:50%;
+    position:absolute;top:21%;right:11%;
+    width:min(23vw,84px);aspect-ratio:1;border-radius:50%;
     background:radial-gradient(circle at 38% 34%, #FFFDF2 0%, var(--luna) 52%, #EAD9A8 100%);
     box-shadow:0 0 0 6px rgba(255,246,220,.06), 0 0 34px 12px rgba(255,246,220,.16), 0 0 90px 30px rgba(255,246,220,.08);
   }
@@ -179,7 +179,7 @@
   .petalo{stroke:var(--tinta);stroke-width:1.3;stroke-linejoin:round}
   .centro{fill:#8A4415;stroke:var(--tinta);stroke-width:1.2}
   .semilla{fill:var(--marigold-alto)}
-  .brillo{fill:#FFD65C;opacity:calc(.06 + var(--frescura) * .1)}
+  .brillo{fill:url(#halo);opacity:calc(.4 + var(--frescura) * .6)}
 
   /* ---------- panel ---------- */
   .panel{
@@ -386,6 +386,11 @@
     </radialGradient>
     <radialGradient id="oro2" cx="50%" cy="72%" r="72%">
       <stop offset="0%" stop-color="#FFF0C2"></stop><stop offset="100%" stop-color="#FFC931"></stop>
+    </radialGradient>
+    <radialGradient id="halo">
+      <stop offset="0%" stop-color="#FFD65C" stop-opacity=".32"></stop>
+      <stop offset="55%" stop-color="#FFB01F" stop-opacity=".11"></stop>
+      <stop offset="100%" stop-color="#FFB01F" stop-opacity="0"></stop>
     </radialGradient>
     <pattern id="greca" width="30" height="15" patternUnits="userSpaceOnUse">
       <rect width="30" height="15" fill="#04081A"></rect>
