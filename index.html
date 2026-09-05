@@ -67,12 +67,12 @@
       linear-gradient(178deg, #052F30 0%, var(--hondo) 34%, var(--medio) 72%, var(--turquesa) 100%);
     transition:background 1.1s ease;
   }
-  /* trama de tela, muy leve */
+  /* hilo de tela: trama diagonal, apenas perceptible */
   .app::before{
-    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.055;
+    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.05;
     background-image:
-      repeating-linear-gradient(90deg, rgba(255,244,222,.9) 0 1px, transparent 1px 4px),
-      repeating-linear-gradient(0deg, rgba(255,244,222,.9) 0 1px, transparent 1px 4px);
+      repeating-linear-gradient(45deg, rgba(255,244,222,.8) 0 1px, transparent 1px 6px),
+      repeating-linear-gradient(-45deg, rgba(4,48,47,.7) 0 1px, transparent 1px 6px);
   }
 
   .polen{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
@@ -118,7 +118,18 @@
   }
   .rotulo em{font-style:normal;color:var(--marigold)}
 
-  .escena{position:relative;z-index:1;flex:1;min-height:230px}
+  .escena{position:relative;z-index:1;flex:1;min-height:230px;overflow:hidden}
+  /* luna baja sobre el horizonte, detras del jardin */
+  .luna{
+    position:absolute;left:50%;bottom:14%;transform:translateX(-50%);
+    width:min(62vw,240px);aspect-ratio:1;border-radius:50%;
+    background:radial-gradient(circle at 50% 45%,
+      rgba(255,231,160,calc(.16 + var(--frescura) * .12)) 0%,
+      rgba(255,176,31,.09) 46%,
+      rgba(255,176,31,0) 70%);
+    pointer-events:none;
+    transition:background 1.1s ease;
+  }
   .pradera{position:absolute;left:0;right:0;bottom:-2px;width:100%;height:auto;display:block}
   #jardin{
     filter:saturate(calc(.42 + var(--frescura) * .58));
@@ -365,6 +376,7 @@
   <svg class="greca" preserveAspectRatio="none" aria-hidden="true"><rect width="100%" height="16" fill="url(#greca)"></rect></svg>
 
   <div class="escena">
+    <div class="luna" aria-hidden="true"></div>
     <svg class="pradera" viewBox="0 0 400 320" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
       <g id="jardin"></g>
     </svg>
@@ -509,8 +521,8 @@
   function marcaFlor(i, opciones){
     var r1 = azar(i,1), r2 = azar(i,2), r3 = azar(i,3), r4 = azar(i,4), r5 = azar(i,5);
     var banda = i % 3;
-    var baseY = [236, 270, 306][banda];
-    var esc   = [0.58, 0.78, 1.0][banda];
+    var baseY = [204, 256, 306][banda];
+    var esc   = [0.50, 0.74, 1.0][banda];
     var x = 18 + r1 * 364;
     var h = 48 + r2 * 38;
     var giro = (r3 - 0.5) * 12;
@@ -545,7 +557,7 @@
 
     var hoja1 = -h * 0.38, hoja2 = -h * 0.66;
     return '<g class="flor' + (opciones.brota ? ' brota' : '') + (opciones.fantasma ? ' fantasma' : '') +
-      '" style="--d:' + (r2*5).toFixed(2) + 's;--lean:' + lado + '" transform="translate(' + x.toFixed(1) + ' ' + baseY +
+      '" data-i="' + i + '" style="--d:' + (r2*5).toFixed(2) + 's;--lean:' + lado + '" transform="translate(' + x.toFixed(1) + ' ' + baseY +
       ') scale(' + esc + ') rotate(' + giro.toFixed(1) + ')">' +
       '<g class="brote"><g class="seca"><g class="mece">' +
         '<path class="tallo" d="M0 0 Q ' + curva.toFixed(1) + ' ' + (-h/2).toFixed(1) + ' 0 ' + (-h).toFixed(1) + '"></path>' +
@@ -558,13 +570,27 @@
   }
 
   function sembrarTodo(){
-    var html = "", f, i;
+    var html = "", f, i, banda;
     if (total === 0){
       for (f = 0; f < 6; f++) html += marcaFlor(f * 5 + 2, {fantasma:true});
     } else {
-      for (i = Math.max(0, total - MAX_VISIBLES); i < total; i++) html += marcaFlor(i, {});
+      // las del fondo se dibujan primero para que las de adelante las tapen
+      for (banda = 0; banda < 3; banda++)
+        for (i = Math.max(0, total - MAX_VISIBLES); i < total; i++)
+          if (i % 3 === banda) html += marcaFlor(i, {});
     }
     jardin.innerHTML = html;
+  }
+
+  function podar(){
+    while (jardin.children.length > MAX_VISIBLES){
+      var vieja = jardin.children[0], j;
+      for (j = 1; j < jardin.children.length; j++){
+        if (+jardin.children[j].getAttribute("data-i") < +vieja.getAttribute("data-i"))
+          vieja = jardin.children[j];
+      }
+      jardin.removeChild(vieja);
+    }
   }
 
   function actualizarCuenta(){
@@ -647,7 +673,7 @@
 
     if (eraPrimera) jardin.innerHTML = "";
     jardin.insertAdjacentHTML("beforeend", marcaFlor(total - 1, {brota:true}));
-    while (jardin.children.length > MAX_VISIBLES) jardin.removeChild(jardin.firstChild);
+    podar();
 
     actualizarCuenta();
     pintarEstado();
