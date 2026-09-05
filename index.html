@@ -46,6 +46,8 @@
     color-scheme: dark;
   }
   *{box-sizing:border-box}
+  /* display:flex de las clases gana al hidden del navegador: hay que decirlo aqui */
+  [hidden]{display:none !important}
   body{
     margin:0;
     background:var(--noche);
