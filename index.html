@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#04302F">
-<meta name="description" content="Un jardín de flores amarillas que crece una flor cada vez que lo tocas.">
+<meta name="description" content="Un jardín de flores amarillas para Mirella: una flor más cada vez que lo tocas.">
 <meta name="color-scheme" content="dark">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png" type="image/png">
@@ -13,31 +13,34 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Flores">
-<meta property="og:title" content="Flores para ti">
-<meta property="og:description" content="Una flor amarilla cada vez que la tocas.">
+<meta property="og:title" content="Flores para Mirella">
+<meta property="og:description" content="Una flor amarilla cada vez que la tocas, Mirella.">
 <meta property="og:image" content="icon-512.png">
-<title>El ramo que crece</title>
+<title>Flores para Mirella</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=Parisienne&family=Jost:wght@400;500;600&display=swap">
 <style>
   :root{
-    --hondo:#06403F;
-    --medio:#0A5F5C;
-    --turquesa:#0E8C85;
-    --claro:#17B3A3;
+    --noche:#060A1E;
+    --noche-2:#0C1330;
+    --indigo:#18204A;
+    --horizonte:#293670;
+    --luna:#FFF6DC;
     --marigold:#FFB01F;
     --marigold-alto:#FFD65C;
     --naranja:#F5801F;
-    --coral:#FF5E5B;
-    --coral-hondo:#D93E4A;
-    --agua:#3FC6E8;
+    --coral:#FF6B6B;
+    --agua:#5AD1F0;
     --agua-hondo:#1B92C4;
-    --hoja:#2FA36B;
-    --hoja-osc:#187A4C;
-    --tinta:#04302F;
+    --hoja:#3E9A73;
+    --luciernaga:#DCF56E;
+    --tinta:#04081A;
     --crema:#FFF4DE;
-    --crema-tenue:rgba(255,244,222,.72);
+    --crema-tenue:rgba(255,244,222,.7);
+    --papel:#F7EBD0;
+    --papel-sombra:#E4D3B0;
+    --tinta-papel:#2E2718;
     --frescura:1;
     --sed:0;
     color-scheme: dark;
@@ -45,7 +48,7 @@
   *{box-sizing:border-box}
   body{
     margin:0;
-    background:var(--hondo);
+    background:var(--noche);
     color:var(--crema);
     font-family:"Jost","Segoe UI",system-ui,sans-serif;
     -webkit-tap-highlight-color:transparent;
@@ -62,35 +65,62 @@
     flex-direction:column;
     overflow:hidden;
     background:
-      radial-gradient(130% 62% at 50% 104%, rgba(23,179,163,calc(.30 + var(--frescura) * .34)) 0%, rgba(23,179,163,0) 64%),
-      radial-gradient(90% 40% at 50% -6%, rgba(255,176,31,.16) 0%, rgba(255,176,31,0) 70%),
-      linear-gradient(178deg, #052F30 0%, var(--hondo) 34%, var(--medio) 72%, var(--turquesa) 100%);
-    transition:background 1.1s ease;
+      radial-gradient(58% 30% at 78% 15%, rgba(255,246,220,.16) 0%, rgba(255,246,220,0) 62%),
+      radial-gradient(120% 54% at 50% 102%, rgba(255,176,31,calc(.10 + var(--frescura) * .20)) 0%, rgba(255,176,31,0) 60%),
+      linear-gradient(179deg, #04071A 0%, var(--noche) 22%, var(--noche-2) 48%, var(--indigo) 76%, var(--horizonte) 100%);
+    transition:background 1.2s ease;
   }
-  /* hilo de tela: trama diagonal, apenas perceptible */
   .app::before{
-    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.05;
+    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.04;
     background-image:
-      repeating-linear-gradient(45deg, rgba(255,244,222,.8) 0 1px, transparent 1px 6px),
-      repeating-linear-gradient(-45deg, rgba(4,48,47,.7) 0 1px, transparent 1px 6px);
+      repeating-linear-gradient(45deg, rgba(255,244,222,.8) 0 1px, transparent 1px 7px),
+      repeating-linear-gradient(-45deg, rgba(4,8,26,.8) 0 1px, transparent 1px 7px);
   }
 
-  .polen{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-  .mota{
-    position:absolute;bottom:-12px;
-    width:5px;height:5px;border-radius:50%;
-    background:var(--marigold-alto);opacity:0;
-    animation:flotar linear infinite;
+  /* ---------- cielo ---------- */
+  .cielo{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .estrella{
+    position:absolute;border-radius:50%;background:var(--crema);
+    animation:titilar ease-in-out infinite alternate;
   }
-  @keyframes flotar{
-    0%{opacity:0;transform:translateY(0) translateX(0) scale(.6)}
-    12%{opacity:.55}
-    88%{opacity:.4}
-    100%{opacity:0;transform:translateY(-84vh) translateX(var(--deriva)) scale(1)}
-  }
+  @keyframes titilar{from{opacity:.12;transform:scale(.7)}to{opacity:.95;transform:scale(1)}}
 
-  /* ---- greca bordada ---- */
-  .greca{display:block;width:100%;height:16px;position:relative;z-index:2;flex:none}
+  .luna{
+    position:absolute;top:7%;right:13%;
+    width:min(26vw,96px);aspect-ratio:1;border-radius:50%;
+    background:radial-gradient(circle at 38% 34%, #FFFDF2 0%, var(--luna) 52%, #EAD9A8 100%);
+    box-shadow:0 0 0 6px rgba(255,246,220,.06), 0 0 34px 12px rgba(255,246,220,.16), 0 0 90px 30px rgba(255,246,220,.08);
+  }
+  .luna i{
+    position:absolute;border-radius:50%;background:rgba(198,178,132,.42);
+  }
+  .luna i:nth-child(1){width:22%;height:22%;left:24%;top:30%}
+  .luna i:nth-child(2){width:13%;height:13%;left:56%;top:22%}
+  .luna i:nth-child(3){width:17%;height:17%;left:48%;top:57%}
+
+  .luciernagas{
+    position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;
+    opacity:calc(.22 + var(--frescura) * .78);
+    transition:opacity 1.3s ease;
+  }
+  .bicho{position:absolute;bottom:-8%;animation:deriva linear infinite}
+  .bicho span{
+    display:block;width:6px;height:6px;border-radius:50%;
+    background:radial-gradient(circle, #F6FFCB 0%, var(--luciernaga) 45%, rgba(220,245,110,0) 72%);
+    box-shadow:0 0 12px 4px rgba(220,245,110,.42);
+    animation:parpadeo ease-in-out infinite;
+  }
+  @keyframes deriva{
+    0%{transform:translate(0,0)}
+    25%{transform:translate(38px,-22vh)}
+    50%{transform:translate(-26px,-44vh)}
+    75%{transform:translate(30px,-66vh)}
+    100%{transform:translate(-14px,-88vh)}
+  }
+  @keyframes parpadeo{0%,100%{opacity:.05}42%{opacity:1}62%{opacity:.25}}
+
+  /* ---------- greca ---------- */
+  .greca{display:block;width:100%;height:15px;position:relative;z-index:2;flex:none}
 
   header{
     position:relative;z-index:2;text-align:center;
@@ -98,8 +128,9 @@
   }
   .eyebrow{
     margin:0 0 6px;
-    font-size:10px;letter-spacing:.42em;text-transform:uppercase;
-    color:var(--marigold);font-weight:600;
+    font-family:"Parisienne",cursive;
+    font-size:21px;letter-spacing:.02em;
+    color:var(--marigold);
   }
   .numero{
     display:block;
@@ -108,31 +139,20 @@
     line-height:.86;
     color:var(--marigold-alto);
     font-variant-numeric:tabular-nums;
-    text-shadow:0 3px 0 rgba(4,48,47,.5), 0 0 34px rgba(255,214,92,.45);
+    text-shadow:0 3px 0 rgba(4,8,26,.6), 0 0 38px rgba(255,214,92,.5);
   }
   .rotulo{
     display:block;margin-top:8px;
     font-family:"Yeseva One",Georgia,serif;
-    font-size:15px;letter-spacing:.12em;text-transform:lowercase;
+    font-size:15px;letter-spacing:.12em;
     color:var(--crema);
   }
   .rotulo em{font-style:normal;color:var(--marigold)}
 
-  .escena{position:relative;z-index:1;flex:1;min-height:230px;overflow:hidden}
-  /* luna baja sobre el horizonte, detras del jardin */
-  .luna{
-    position:absolute;left:50%;bottom:14%;transform:translateX(-50%);
-    width:min(62vw,240px);aspect-ratio:1;border-radius:50%;
-    background:radial-gradient(circle at 50% 45%,
-      rgba(255,231,160,calc(.16 + var(--frescura) * .12)) 0%,
-      rgba(255,176,31,.09) 46%,
-      rgba(255,176,31,0) 70%);
-    pointer-events:none;
-    transition:background 1.1s ease;
-  }
+  .escena{position:relative;z-index:1;flex:1;min-height:230px}
   .pradera{position:absolute;left:0;right:0;bottom:-2px;width:100%;height:auto;display:block}
   #jardin{
-    filter:saturate(calc(.42 + var(--frescura) * .58));
+    filter:saturate(calc(.44 + var(--frescura) * .56));
     transition:filter 1.2s ease;
   }
 
@@ -152,42 +172,20 @@
   @keyframes brotar{0%{transform:scale(.02,.04)}62%{transform:scale(1.09,1.05)}100%{transform:scale(1)}}
   #jardin.bebe .brote{animation:estirar 1.1s cubic-bezier(.3,1.4,.4,1)}
   @keyframes estirar{0%{transform:scaleY(1)}34%{transform:scaleY(1.13) scaleX(.95)}100%{transform:scaleY(1)}}
-  .fantasma{opacity:.14}
+  .fantasma{opacity:.16}
 
   .tallo{fill:none;stroke:var(--hoja);stroke-width:3;stroke-linecap:round}
   .hoja{fill:var(--hoja);stroke:var(--tinta);stroke-width:1.1;stroke-linejoin:round}
   .petalo{stroke:var(--tinta);stroke-width:1.3;stroke-linejoin:round}
   .centro{fill:#8A4415;stroke:var(--tinta);stroke-width:1.2}
   .semilla{fill:var(--marigold-alto)}
+  .brillo{fill:#FFD65C;opacity:calc(.06 + var(--frescura) * .1)}
 
-  /* ---- mariposas ---- */
-  .mariposa{
-    position:absolute;width:22px;height:18px;z-index:2;pointer-events:none;
-    opacity:0;transition:opacity .9s ease;
-  }
-  .app.viva .mariposa{opacity:1}
-  .mariposa svg{width:100%;height:100%;animation:aletear .34s ease-in-out infinite alternate}
-  .m1{left:14%;top:44%;animation:volar1 17s ease-in-out infinite}
-  .m2{right:16%;top:56%;animation:volar2 21s ease-in-out infinite}
-  @keyframes aletear{from{transform:scaleX(.55)}to{transform:scaleX(1)}}
-  @keyframes volar1{
-    0%,100%{transform:translate(0,0) rotate(-6deg)}
-    25%{transform:translate(52px,-30px) rotate(8deg)}
-    50%{transform:translate(120px,10px) rotate(-4deg)}
-    75%{transform:translate(40px,34px) rotate(10deg)}
-  }
-  @keyframes volar2{
-    0%,100%{transform:translate(0,0) rotate(5deg)}
-    30%{transform:translate(-70px,26px) rotate(-9deg)}
-    60%{transform:translate(-130px,-22px) rotate(6deg)}
-    85%{transform:translate(-30px,-40px) rotate(-3deg)}
-  }
-
-  /* ---- panel ---- */
+  /* ---------- panel ---------- */
   .panel{
     position:relative;z-index:2;
     padding:4px 22px 16px;
-    background:linear-gradient(180deg, rgba(6,64,63,0) 0%, rgba(5,48,48,.86) 24%, #052B2C 62%, #04302F 100%);
+    background:linear-gradient(180deg, rgba(6,10,30,0) 0%, rgba(6,10,30,.82) 24%, #050917 62%, #04081A 100%);
     display:flex;flex-direction:column;align-items:center;gap:10px;
   }
   .mensaje{
@@ -197,7 +195,7 @@
     font-family:"Parisienne",cursive;
     font-size:27px;line-height:1.24;
     color:var(--crema);
-    text-shadow:0 2px 12px rgba(4,48,47,.6);
+    text-shadow:0 2px 14px rgba(4,8,26,.7);
     transition:opacity .26s ease, transform .26s ease;
   }
   .mensaje.cambia{opacity:0;transform:translateY(6px)}
@@ -206,8 +204,7 @@
   .botones{display:flex;align-items:flex-end;justify-content:center;gap:26px}
   .bloque{display:flex;flex-direction:column;align-items:center;gap:7px}
   .btn{
-    position:relative;border:0;padding:0;cursor:pointer;
-    border-radius:50%;
+    position:relative;border:0;padding:0;cursor:pointer;border-radius:50%;
     display:grid;place-items:center;
     transition:transform .15s cubic-bezier(.2,1.5,.4,1), box-shadow .15s ease;
   }
@@ -217,12 +214,13 @@
 
   .btn-flor{
     width:122px;height:122px;
-    background:radial-gradient(circle at 50% 40%, #14807A 0%, #0A5F5C 58%, #084B49 100%);
+    background:radial-gradient(circle at 50% 38%, #2A3468 0%, #18204A 58%, #101733 100%);
     box-shadow:
       0 0 0 3px var(--tinta),
-      0 0 0 7px rgba(255,176,31,.28),
-      0 12px 26px rgba(2,26,26,.55),
-      inset 0 -6px 14px rgba(2,26,26,.5);
+      0 0 0 7px rgba(255,176,31,.3),
+      0 0 34px 6px rgba(255,176,31,.16),
+      0 12px 26px rgba(2,4,14,.6),
+      inset 0 -6px 14px rgba(2,4,14,.55);
   }
   .btn-flor svg{width:96px;height:96px}
   .btn-flor .respira{transform-box:fill-box;transform-origin:50% 50%;animation:respirar 4.2s ease-in-out infinite}
@@ -230,19 +228,22 @@
 
   .btn-agua{
     width:88px;height:88px;
-    background:radial-gradient(circle at 50% 36%, #2AA8CF 0%, #1B92C4 54%, #14719B 100%);
+    background:radial-gradient(circle at 50% 34%, #2E9BC4 0%, #1B7AA8 54%, #135A80 100%);
     box-shadow:
       0 0 0 3px var(--tinta),
-      0 0 0 6px rgba(63,198,232,.24),
-      0 10px 20px rgba(2,26,26,.5),
-      inset 0 -5px 12px rgba(2,26,26,.42);
+      0 0 0 6px rgba(90,209,240,.26),
+      0 0 24px 4px rgba(90,209,240,.14),
+      0 10px 20px rgba(2,4,14,.55),
+      inset 0 -5px 12px rgba(2,4,14,.5);
   }
   .btn-agua svg{width:52px;height:52px}
   .btn-agua .gota-icono{animation:gotear 3.4s ease-in-out infinite}
   @keyframes gotear{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
   .btn-agua.sedientos{animation:pide 1.5s ease-in-out infinite}
-  @keyframes pide{0%,100%{box-shadow:0 0 0 3px var(--tinta),0 0 0 6px rgba(63,198,232,.24),0 10px 20px rgba(2,26,26,.5)}
-                  50%{box-shadow:0 0 0 3px var(--tinta),0 0 0 12px rgba(63,198,232,.45),0 10px 20px rgba(2,26,26,.5)}}
+  @keyframes pide{
+    0%,100%{box-shadow:0 0 0 3px var(--tinta),0 0 0 6px rgba(90,209,240,.26),0 10px 20px rgba(2,4,14,.55)}
+    50%{box-shadow:0 0 0 3px var(--tinta),0 0 0 13px rgba(90,209,240,.42),0 10px 20px rgba(2,4,14,.55)}
+  }
 
   .etiqueta{
     font-size:10px;letter-spacing:.24em;text-transform:uppercase;font-weight:600;
@@ -260,7 +261,7 @@
     position:absolute;width:12px;height:17px;
     border-radius:50% 50% 50% 50%/62% 62% 38% 38%;
     background:linear-gradient(160deg,var(--marigold-alto),var(--naranja));
-    border:1px solid rgba(4,48,47,.5);
+    border:1px solid rgba(4,8,26,.55);
     animation:caer 1.5s ease-out forwards;
   }
   @keyframes caer{
@@ -271,8 +272,8 @@
     position:absolute;top:-16px;
     width:7px;height:11px;
     border-radius:50% 50% 50% 50%/64% 64% 36% 36%;
-    background:linear-gradient(180deg,#9BE7FA,var(--agua));
-    box-shadow:0 0 8px rgba(63,198,232,.7);
+    background:linear-gradient(180deg,#CFF6FF,var(--agua));
+    box-shadow:0 0 10px rgba(90,209,240,.8);
     animation:regar .95s cubic-bezier(.4,.1,.8,1) forwards;
   }
   @keyframes regar{
@@ -281,44 +282,93 @@
     100%{opacity:0;transform:translateY(var(--dy)) scaleY(1.5)}
   }
 
+  /* ---------- pie y notita ---------- */
   footer{
     position:relative;z-index:2;
-    background:#04302F;
-    padding:12px 22px calc(24px + env(safe-area-inset-bottom));
+    background:#04081A;
+    padding:12px 22px calc(26px + env(safe-area-inset-bottom));
     text-align:center;
   }
   .firma{
-    margin:0 0 13px;
+    margin:0 0 14px;
     font-family:"Parisienne",cursive;
-    font-size:17px;line-height:1.4;color:var(--crema-tenue);
+    font-size:18px;line-height:1.4;color:var(--crema-tenue);
     text-wrap:balance;
   }
-  .como{
-    background:none;border:1.5px solid rgba(255,176,31,.42);
-    color:var(--marigold);
-    font-family:inherit;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
-    padding:9px 18px;border-radius:999px;cursor:pointer;
+  /* el disparador es una esquina de papel asomando */
+  .tirador{
+    position:relative;
+    background:var(--papel);
+    color:var(--tinta-papel);
+    border:0;cursor:pointer;
+    font-family:"Parisienne",cursive;
+    font-size:19px;
+    padding:7px 22px 8px;
+    border-radius:3px 14px 3px 14px;
+    box-shadow:0 6px 14px rgba(2,4,14,.5), inset 0 -2px 0 var(--papel-sombra);
+    transform:rotate(-1.4deg);
   }
-  .como:hover{border-color:var(--marigold);background:rgba(255,176,31,.1)}
-  .como:focus-visible{outline:3px solid var(--marigold);outline-offset:3px}
-  .instrucciones{
-    margin:14px auto 0;max-width:34ch;text-align:left;
-    border:1.5px solid rgba(255,244,222,.16);
-    border-radius:4px 18px 4px 18px;
-    padding:15px 17px;
-    background:rgba(255,244,222,.05);
+  .tirador:hover{transform:rotate(-1.4deg) translateY(-2px)}
+  .tirador:focus-visible{outline:3px solid var(--marigold);outline-offset:4px}
+  .tirador::after{
+    content:"";position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);
+    width:26px;height:8px;background:var(--papel);
+    clip-path:polygon(0 0,100% 0,50% 100%);
   }
-  .instrucciones h2{
-    margin:0 0 8px;font-size:10px;letter-spacing:.26em;text-transform:uppercase;
-    color:var(--marigold);font-weight:600;
+
+  .nota{
+    position:relative;
+    margin:26px auto 6px;max-width:33ch;text-align:left;
+    background:
+      repeating-linear-gradient(0deg, rgba(46,39,24,.05) 0 1px, transparent 1px 26px),
+      var(--papel);
+    color:var(--tinta-papel);
+    padding:26px 22px 22px;
+    border-radius:2px;
+    transform:rotate(-.9deg);
+    box-shadow:0 14px 30px rgba(2,4,14,.55), 0 2px 0 var(--papel-sombra);
   }
-  .instrucciones p{margin:0 0 10px;font-size:13px;line-height:1.55;color:var(--crema-tenue)}
-  .instrucciones p:last-child{margin-bottom:0}
-  .instrucciones b{color:var(--crema);font-weight:500}
-  .instrucciones .separa{margin-top:16px;padding-top:14px;border-top:1.5px solid rgba(255,244,222,.14)}
+  /* cinta adhesiva */
+  .nota::before{
+    content:"";position:absolute;top:-11px;left:50%;
+    width:86px;height:24px;transform:translateX(-50%) rotate(-3deg);
+    background:rgba(255,255,255,.34);
+    border-left:1px dashed rgba(46,39,24,.18);
+    border-right:1px dashed rgba(46,39,24,.18);
+    box-shadow:0 1px 3px rgba(2,4,14,.2);
+  }
+  .nota h2{
+    margin:0 0 4px;
+    font-family:"Parisienne",cursive;
+    font-size:25px;font-weight:400;line-height:1.1;
+    color:#8A4415;
+  }
+  .nota h2 + p{margin-top:0}
+  .nota .otra{margin-top:22px;padding-top:16px;border-top:1px dashed rgba(46,39,24,.3)}
+  .nota p{margin:0 0 11px;font-size:14px;line-height:1.62}
+  .nota p:last-child{margin-bottom:0}
+  .nota b{font-weight:600}
+  .nota ol{margin:0;padding:0;list-style:none;counter-reset:paso}
+  .nota li{
+    position:relative;padding-left:30px;margin-bottom:10px;
+    font-size:14px;line-height:1.55;
+  }
+  .nota li::before{
+    counter-increment:paso;content:counter(paso);
+    position:absolute;left:0;top:-2px;
+    width:21px;height:21px;border-radius:50%;
+    background:var(--marigold);color:#3A2408;
+    font-family:"Yeseva One",Georgia,serif;font-size:12px;
+    display:grid;place-items:center;
+  }
+  .nota .pd{
+    margin-top:18px;font-family:"Parisienne",cursive;font-size:19px;
+    color:#8A4415;text-align:right;
+  }
 
   @media (prefers-reduced-motion: reduce){
-    .flor .mece,.btn-flor .respira,.mota,.mariposa,.mariposa svg,.btn-agua .gota-icono,.btn-agua.sedientos{animation:none}
+    .flor .mece,.btn-flor .respira,.bicho,.bicho span,.estrella,
+    .btn-agua .gota-icono,.btn-agua.sedientos{animation:none}
     .flor.brota .brote,#jardin.bebe .brote{animation-duration:.01ms}
     .petalo-cae,.gota-cae{animation-duration:.4s}
   }
@@ -337,12 +387,12 @@
     <radialGradient id="oro2" cx="50%" cy="72%" r="72%">
       <stop offset="0%" stop-color="#FFF0C2"></stop><stop offset="100%" stop-color="#FFC931"></stop>
     </radialGradient>
-    <pattern id="greca" width="30" height="16" patternUnits="userSpaceOnUse">
-      <rect width="30" height="16" fill="#04302F"></rect>
-      <path d="M15 3 L18.4 8 L15 13 L11.6 8 Z" fill="#FFB01F"></path>
-      <circle cx="1" cy="8" r="2.1" fill="#FF5E5B"></circle>
-      <circle cx="29" cy="8" r="2.1" fill="#FF5E5B"></circle>
-      <path d="M6.5 8 h2.4 M21.1 8 h2.4" stroke="#17B3A3" stroke-width="1.6" stroke-linecap="round"></path>
+    <pattern id="greca" width="30" height="15" patternUnits="userSpaceOnUse">
+      <rect width="30" height="15" fill="#04081A"></rect>
+      <path d="M15 2.5 L18.4 7.5 L15 12.5 L11.6 7.5 Z" fill="#FFB01F"></path>
+      <circle cx="1" cy="7.5" r="2" fill="#FF6B6B"></circle>
+      <circle cx="29" cy="7.5" r="2" fill="#FF6B6B"></circle>
+      <path d="M6.5 7.5 h2.4 M21.1 7.5 h2.4" stroke="#DCF56E" stroke-width="1.6" stroke-linecap="round"></path>
     </pattern>
   </defs>
 </svg>
@@ -350,40 +400,27 @@
 </head>
 <body>
 <div class="app" id="app">
-  <div class="polen" id="polen"></div>
-
-  <div class="mariposa m1">
-    <svg viewBox="0 0 22 18" aria-hidden="true">
-      <path d="M11 9 C 5 -1 -2 2 2 8 C -1 14 5 18 11 9 Z" fill="#FF5E5B" stroke="#04302F" stroke-width="1"></path>
-      <path d="M11 9 C 17 -1 24 2 20 8 C 23 14 17 18 11 9 Z" fill="#FFB01F" stroke="#04302F" stroke-width="1"></path>
-      <path d="M11 4 v10" stroke="#04302F" stroke-width="1.6" stroke-linecap="round"></path>
-    </svg>
+  <div class="cielo" id="cielo">
+    <div class="luna" aria-hidden="true"><i></i><i></i><i></i></div>
   </div>
-  <div class="mariposa m2">
-    <svg viewBox="0 0 22 18" aria-hidden="true">
-      <path d="M11 9 C 5 -1 -2 2 2 8 C -1 14 5 18 11 9 Z" fill="#FFD65C" stroke="#04302F" stroke-width="1"></path>
-      <path d="M11 9 C 17 -1 24 2 20 8 C 23 14 17 18 11 9 Z" fill="#FF5E5B" stroke="#04302F" stroke-width="1"></path>
-      <path d="M11 4 v10" stroke="#04302F" stroke-width="1.6" stroke-linecap="round"></path>
-    </svg>
-  </div>
+  <div class="luciernagas" id="luciernagas" aria-hidden="true"></div>
 
   <header>
-    <p class="eyebrow">Para ti</p>
+    <p class="eyebrow">Para Mirella</p>
     <span class="numero" id="numero">0</span>
     <span class="rotulo" id="rotulo">flores <em>amarillas</em></span>
   </header>
 
-  <svg class="greca" preserveAspectRatio="none" aria-hidden="true"><rect width="100%" height="16" fill="url(#greca)"></rect></svg>
+  <svg class="greca" preserveAspectRatio="none" aria-hidden="true"><rect width="100%" height="15" fill="url(#greca)"></rect></svg>
 
   <div class="escena">
-    <div class="luna" aria-hidden="true"></div>
     <svg class="pradera" viewBox="0 0 400 320" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
       <g id="jardin"></g>
     </svg>
   </div>
 
   <div class="panel">
-    <p class="mensaje" id="mensaje">Toca la flor. Cada vez que la toques te regalo una flor amarilla.</p>
+    <p class="mensaje" id="mensaje">Toca la flor, Mirella. Cada vez que la toques te regalo una flor amarilla.</p>
 
     <div class="botones">
       <div class="bloque">
@@ -397,8 +434,8 @@
           <svg viewBox="-26 -26 52 52" aria-hidden="true">
             <g class="gota-icono">
               <path d="M0 -20 C 8 -8 15 -1 15 6 A15 15 0 1 1 -15 6 C -15 -1 -8 -8 0 -20 Z"
-                    fill="#EAF9FF" stroke="#04302F" stroke-width="2.4" stroke-linejoin="round"></path>
-              <path d="M-6 6 a6 6 0 0 0 6 6" fill="none" stroke="#3FC6E8" stroke-width="2.6" stroke-linecap="round"></path>
+                    fill="#EAF9FF" stroke="#04081A" stroke-width="2.4" stroke-linejoin="round"></path>
+              <path d="M-6 6 a6 6 0 0 0 6 6" fill="none" stroke="#5AD1F0" stroke-width="2.6" stroke-linecap="round"></path>
             </g>
           </svg>
         </button>
@@ -410,21 +447,28 @@
     <div class="lluvia" id="lluvia"></div>
   </div>
 
-  <svg class="greca" preserveAspectRatio="none" aria-hidden="true"><rect width="100%" height="16" fill="url(#greca)"></rect></svg>
+  <svg class="greca" preserveAspectRatio="none" aria-hidden="true"><rect width="100%" height="15" fill="url(#greca)"></rect></svg>
 
   <footer>
-    <p class="firma">Dicen que una flor amarilla se regala cuando quieres a alguien. Yo te debía varias.</p>
-    <button class="como" id="como" aria-expanded="false" aria-controls="instrucciones">¿Cómo la guardo en mi pantalla?</button>
-    <div class="instrucciones" id="instrucciones" hidden>
-      <h2>Para tenerla a mano</h2>
-      <p><b>iPhone:</b> abre este enlace en Safari, toca el botón de compartir y elige <b>Añadir a pantalla de inicio</b>.</p>
-      <p><b>Android:</b> ábrelo en Chrome, toca los tres puntos y elige <b>Instalar app</b> o <b>Añadir a pantalla principal</b>.</p>
-      <p>Queda como un ícono más del celular, funciona sin internet y tus flores se guardan ahí.</p>
-      <h2 class="separa">Cómo se cuida</h2>
-      <p>Toca la <b>flor</b> para plantar una nueva. Toca la <b>gota</b> para echarles aguita: se estiran, brillan y salen mariposas. Si pasan días sin agua se agachan, pero con un toque vuelven.</p>
-      <h2 class="separa">Y si la quieres quitar</h2>
-      <p>Mantén pulsado el ícono en la pantalla y elige <b>Eliminar</b> (en iPhone, <b>Eliminar marcador</b>). Se va como cualquier otra app y no deja nada instalado.</p>
-      <p>Si además quieres borrar la cuenta de flores, entra a los ajustes del navegador y limpia los datos de este sitio.</p>
+    <p class="firma">Dicen que una flor amarilla se regala cuando quieres a alguien.<br>Yo te debía varias, Mirella.</p>
+
+    <button class="tirador" id="como" aria-expanded="false" aria-controls="nota">léeme</button>
+
+    <div class="nota" id="nota" hidden>
+      <h2>Para que te la quedes</h2>
+      <p>Si la guardas en tu pantalla, se abre como una app y funciona hasta sin internet.</p>
+      <ol>
+        <li><b>iPhone:</b> ábrela en Safari, toca el botón de compartir y baja hasta <b>Añadir a pantalla de inicio</b>.</li>
+        <li><b>Android:</b> ábrela en Chrome, toca los tres puntos y elige <b>Instalar app</b> (o <b>Añadir a pantalla principal</b>).</li>
+      </ol>
+
+      <h2 class="otra">Cómo se cuidan</h2>
+      <p>La <b>flor</b> planta una nueva. La <b>gota</b> les echa aguita: se estiran y salen luciérnagas. Si pasan días sin agua se agachan un poco, pero con un toque vuelven. Ninguna se pierde.</p>
+
+      <h2 class="otra">Si algún día la quitas</h2>
+      <p>Mantén pulsado el ícono y dale a <b>Eliminar</b> (en iPhone dice <b>Eliminar marcador</b>). Se va como cualquier app, sin dejar nada. Tus flores siguen guardadas por si vuelves.</p>
+
+      <p class="pd">— y vuelve, ¿ya?</p>
     </div>
   </footer>
 </div>
@@ -434,8 +478,21 @@
   "use strict";
   var CLAVE = "ramo-amarillo-v2";
   var CLAVE_VIEJA = "ramo-amarillo-v1";
-  var MAX_VISIBLES = 60;
-  var SEQUIA = 72 * 3600 * 1000;   // en 3 dias sin agua quedan del todo sedientas
+  var MAX_VISIBLES = 120;
+  var SEQUIA = 72 * 3600 * 1000;
+  var AUREO = 0.6180339887498949;
+  var FILAS = 2, FACTOR = 1;
+
+  // El prado gana filas y las flores encogen a medida que son mas,
+  // para que cada flor nueva tenga su propio sitio visible.
+  function calcularDisposicion(){
+    var n = Math.min(total, MAX_VISIBLES);
+    var f = n <= 8 ? 2 : n <= 24 ? 3 : n <= 48 ? 4 : 5;
+    var e = n <= 10 ? 1 : n <= 24 ? 0.86 : n <= 48 ? 0.74 : n <= 80 ? 0.64 : 0.56;
+    var cambio = (f !== FILAS || e !== FACTOR);
+    FILAS = f; FACTOR = e;
+    return cambio;
+  }
 
   var jardin = document.getElementById("jardin");
   var numeroEl = document.getElementById("numero");
@@ -454,7 +511,7 @@
     "Por lo que me cuentas a las dos de la mañana.",
     "Porque me haces querer ser más paciente.",
     "Por tus manos frías buscando las mías.",
-    "Porque me acuerdo de ti sin motivo.",
+    "Porque me acuerdo de ti sin motivo, Mirella.",
     "Por cómo frunces el ceño cuando te concentras.",
     "Porque me escuchas de verdad.",
     "Por los silencios cómodos.",
@@ -462,16 +519,16 @@
     "Por la forma en que caminas apurada.",
     "Porque tu abrazo arregla el día entero.",
     "Por todo lo que todavía no te he dicho.",
-    "Porque hoy también te elegiría.",
+    "Porque hoy también te elegiría, Mirella.",
     "Por la primera vez, y por todas las que faltan."
   ];
   var hitos = {
-    1:"La primera. Y no pienso parar.",
+    1:"La primera, Mirella. Y no pienso parar.",
     5:"Cinco. Ya parece un ramito.",
     10:"Diez flores. Todas tuyas.",
     25:"Veinticinco. Esto ya es un jardín.",
     50:"Cincuenta, y sigo contando.",
-    100:"Cien flores amarillas. Te quiero, en serio.",
+    100:"Cien flores amarillas, Mirella. Te quiero, en serio.",
     200:"Doscientas. Dejé de contar las razones.",
     365:"Una por cada día del año.",
     500:"Quinientas. Y esto no se acaba."
@@ -481,10 +538,10 @@
     "Aguita fresca. Ya están contentas.",
     "Listo, tenían sed.",
     "Se enderezaron solo por ti.",
-    "Un rato de lluvia y a florecer."
+    "Mira, salieron las luciérnagas."
   ];
   var frasesSed = [
-    "Tienen sed. ¿Les echas aguita?",
+    "Tienen sed, Mirella. ¿Les echas aguita?",
     "Están un poco caídas, dales agua.",
     "Hace rato que nadie las riega."
   ];
@@ -517,23 +574,26 @@
     return x - Math.floor(x);
   }
 
-  // --- dibujo de una flor: tres especies, contorno de bordado ---
   function marcaFlor(i, opciones){
     var r1 = azar(i,1), r2 = azar(i,2), r3 = azar(i,3), r4 = azar(i,4), r5 = azar(i,5);
-    var banda = i % 3;
-    var baseY = [204, 256, 306][banda];
-    var esc   = [0.50, 0.74, 1.0][banda];
-    var x = 18 + r1 * 364;
-    var h = 48 + r2 * 38;
+    var banda = i % FILAS;
+    var puesto = Math.floor(i / FILAS);
+    // sucesion aurea: cada flor nueva cae en el hueco mas grande que queda
+    var hueco = ((puesto + 1) * AUREO + banda * 0.37) % 1;
+    var x = 24 + hueco * 352 + (r1 - 0.5) * 13;
+    if (x < 14) x = 14; else if (x > 386) x = 386;
+    var prof = FILAS === 1 ? 1 : banda / (FILAS - 1);
+    var baseY = 196 + 112 * prof;
+    var esc = (0.55 + 0.45 * prof) * FACTOR;
+    var h = 46 + r2 * 34;
     var giro = (r3 - 0.5) * 12;
     var curva = (r4 - 0.5) * 18;
     var oro = "url(#oro" + Math.floor(r5 * 3) + ")";
     var especie = Math.floor(r4 * 3);
     var lado = r2 > 0.5 ? 1 : -1;
-    var k, cabeza = "";
+    var k, cabeza = '<circle class="brillo" r="26"></circle>';
 
     if (especie === 0){
-      // margarita doble: dos coronas de petalos
       for (k = 0; k < 8; k++)
         cabeza += '<use href="#petalo" fill="' + oro + '" class="petalo" transform="rotate(' + (k*45) + ')"></use>';
       for (k = 0; k < 8; k++)
@@ -542,13 +602,11 @@
       for (k = 0; k < 6; k++)
         cabeza += '<circle class="semilla" r="1.3" cx="0" cy="-4" transform="rotate(' + (k*60) + ')"></circle>';
     } else if (especie === 1){
-      // flor de cinco petalos anchos
       for (k = 0; k < 5; k++)
         cabeza += '<use href="#petaloAncho" fill="' + oro + '" class="petalo" transform="rotate(' + (k*72) + ')"></use>';
       cabeza += '<circle class="centro" r="8.5"></circle>';
       cabeza += '<circle class="semilla" r="3" opacity=".55"></circle>';
     } else {
-      // campanita de tres petalos
       cabeza += '<path class="petalo" fill="' + oro + '" d="M0 6 C -15 -3 -15 -25 0 -33 C 15 -25 15 -3 0 6 Z"></path>';
       cabeza += '<use href="#petalo" fill="#FFE7A0" class="petalo" transform="rotate(-42) scale(.82)"></use>';
       cabeza += '<use href="#petalo" fill="#FFE7A0" class="petalo" transform="rotate(42) scale(.82)"></use>';
@@ -557,7 +615,8 @@
 
     var hoja1 = -h * 0.38, hoja2 = -h * 0.66;
     return '<g class="flor' + (opciones.brota ? ' brota' : '') + (opciones.fantasma ? ' fantasma' : '') +
-      '" data-i="' + i + '" style="--d:' + (r2*5).toFixed(2) + 's;--lean:' + lado + '" transform="translate(' + x.toFixed(1) + ' ' + baseY +
+      '" data-i="' + i + '" data-banda="' + banda + '" style="--d:' + (r2*5).toFixed(2) + 's;--lean:' + lado +
+      '" transform="translate(' + x.toFixed(1) + ' ' + baseY.toFixed(1) +
       ') scale(' + esc + ') rotate(' + giro.toFixed(1) + ')">' +
       '<g class="brote"><g class="seca"><g class="mece">' +
         '<path class="tallo" d="M0 0 Q ' + curva.toFixed(1) + ' ' + (-h/2).toFixed(1) + ' 0 ' + (-h).toFixed(1) + '"></path>' +
@@ -570,16 +629,29 @@
   }
 
   function sembrarTodo(){
+    calcularDisposicion();
     var html = "", f, i, banda;
     if (total === 0){
-      for (f = 0; f < 6; f++) html += marcaFlor(f * 5 + 2, {fantasma:true});
+      for (f = 0; f < 6; f++) html += marcaFlor(f * 3 + 1, {fantasma:true});
     } else {
-      // las del fondo se dibujan primero para que las de adelante las tapen
-      for (banda = 0; banda < 3; banda++)
+      // de atras hacia adelante, para que las cercanas tapen a las del fondo
+      for (banda = 0; banda < FILAS; banda++)
         for (i = Math.max(0, total - MAX_VISIBLES); i < total; i++)
-          if (i % 3 === banda) html += marcaFlor(i, {});
+          if (i % FILAS === banda) html += marcaFlor(i, {});
     }
     jardin.innerHTML = html;
+  }
+
+  // coloca una flor nueva respetando la profundidad de su fila
+  function plantarNodo(i){
+    var banda = i % FILAS, ref = null, hijos = jardin.children, j;
+    for (j = 0; j < hijos.length; j++){
+      if (+hijos[j].getAttribute("data-banda") > banda){ ref = hijos[j]; break; }
+    }
+    var molde = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    molde.innerHTML = marcaFlor(i, {brota:true});
+    var nueva = molde.firstChild;
+    if (ref) jardin.insertBefore(nueva, ref); else jardin.appendChild(nueva);
   }
 
   function podar(){
@@ -612,7 +684,6 @@
     var f = frescura();
     app.style.setProperty("--frescura", f.toFixed(3));
     app.style.setProperty("--sed", (1 - f).toFixed(3));
-    app.classList.toggle("viva", f > 0.6 && total > 0);
     riego.classList.toggle("sedientos", f < 0.35 && total > 0);
     estadoEl.classList.toggle("seco", f < 0.35);
     if (total === 0){
@@ -671,9 +742,15 @@
     if (eraPrimera) riegoTs = Date.now();
     guardar();
 
-    if (eraPrimera) jardin.innerHTML = "";
-    jardin.insertAdjacentHTML("beforeend", marcaFlor(total - 1, {brota:true}));
-    podar();
+    // si el prado cambia de filas o de tamaño, se redibuja entero
+    if (eraPrimera || calcularDisposicion()){
+      sembrarTodo();
+      var recien = jardin.querySelector('[data-i="' + (total - 1) + '"]');
+      if (recien) recien.classList.add("brota");
+    } else {
+      plantarNodo(total - 1);
+      podar();
+    }
 
     actualizarCuenta();
     pintarEstado();
@@ -714,25 +791,43 @@
     document.getElementById("florBoton").innerHTML = m;
   })();
 
-  (function polen(){
+  (function cieloNocturno(){
+    var cielo = document.getElementById("cielo");
     var t = "";
-    for (var i = 0; i < 14; i++){
-      t += '<span class="mota" style="left:' + (Math.random()*96+2).toFixed(1) +
-           '%;--deriva:' + (Math.random()*90-45).toFixed(0) + 'px;animation-duration:' +
-           (13 + Math.random()*12).toFixed(1) + 's;animation-delay:-' + (Math.random()*20).toFixed(1) + 's"></span>';
+    for (var i = 0; i < 46; i++){
+      var r = (Math.random() * 1.6 + 1).toFixed(1);
+      t += '<span class="estrella" style="left:' + (Math.random()*98+1).toFixed(1) +
+           '%;top:' + (Math.random()*56+1).toFixed(1) +
+           '%;width:' + r + 'px;height:' + r +
+           'px;animation-duration:' + (1.8 + Math.random()*3.4).toFixed(1) +
+           's;animation-delay:-' + (Math.random()*5).toFixed(1) + 's"></span>';
     }
-    document.getElementById("polen").innerHTML = t;
+    cielo.insertAdjacentHTML("beforeend", t);
+  })();
+
+  (function luciernagas(){
+    var t = "";
+    for (var i = 0; i < 16; i++){
+      t += '<span class="bicho" style="left:' + (Math.random()*94+3).toFixed(1) +
+           '%;animation-duration:' + (16 + Math.random()*16).toFixed(1) +
+           's;animation-delay:-' + (Math.random()*26).toFixed(1) + 's">' +
+           '<span style="animation-duration:' + (1.6 + Math.random()*2.6).toFixed(1) +
+           's;animation-delay:-' + (Math.random()*4).toFixed(1) + 's"></span></span>';
+    }
+    document.getElementById("luciernagas").innerHTML = t;
   })();
 
   boton.addEventListener("click", plantar);
   riego.addEventListener("click", regar);
 
   var como = document.getElementById("como");
-  var instrucciones = document.getElementById("instrucciones");
+  var nota = document.getElementById("nota");
   como.addEventListener("click", function(){
-    var abrir = instrucciones.hidden;
-    instrucciones.hidden = !abrir;
+    var abrir = nota.hidden;
+    nota.hidden = !abrir;
     como.setAttribute("aria-expanded", String(abrir));
+    como.textContent = abrir ? "cerrar la nota" : "léeme";
+    if (abrir) nota.scrollIntoView({behavior:"smooth", block:"nearest"});
   });
 
   sembrarTodo();
