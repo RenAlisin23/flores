@@ -85,8 +85,9 @@
   }
   @keyframes titilar{from{opacity:.12;transform:scale(.7)}to{opacity:.95;transform:scale(1)}}
 
+  /* anclada al cielo, no a la altura de la pagina: asi no se mueve nunca */
   .luna{
-    position:absolute;top:21%;right:11%;
+    position:absolute;top:26px;right:11%;
     width:min(23vw,84px);aspect-ratio:1;border-radius:50%;
     background:radial-gradient(circle at 38% 34%, #FFFDF2 0%, var(--luna) 52%, #EAD9A8 100%);
     box-shadow:0 0 0 6px rgba(255,246,220,.06), 0 0 34px 12px rgba(255,246,220,.16), 0 0 90px 30px rgba(255,246,220,.08);
@@ -172,7 +173,7 @@
   }
   .rotulo em{font-style:normal;color:var(--marigold)}
 
-  .escena{position:relative;z-index:1;flex:1;min-height:230px}
+  .escena{position:relative;z-index:1;flex:1;min-height:230px;overflow:hidden}
   .pradera{position:absolute;left:0;right:0;bottom:-2px;width:100%;height:auto;display:block}
   #jardin{
     filter:saturate(calc(.44 + var(--frescura) * .56));
@@ -340,9 +341,31 @@
     clip-path:polygon(0 0,100% 0,50% 100%);
   }
 
+  /* la nota se posa encima: no empuja ni mueve nada de la pagina */
+  .velo{
+    position:fixed;inset:0;z-index:30;
+    display:flex;align-items:center;justify-content:center;
+    padding:20px;
+    background:rgba(3,6,18,.76);
+    -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+    animation:aparecer .26s ease both;
+  }
+  @keyframes aparecer{from{opacity:0}to{opacity:1}}
+  .hoja{
+    display:flex;flex-direction:column;align-items:center;gap:14px;
+    max-height:calc(100dvh - 40px);max-width:100%;
+  }
+  .velo .nota{
+    margin:0;overflow-y:auto;
+    animation:posarse .42s cubic-bezier(.2,1.2,.4,1) both;
+  }
+  @keyframes posarse{
+    from{transform:translateY(18px) rotate(-5deg);opacity:0}
+    to{transform:translateY(0) rotate(-.9deg);opacity:1}
+  }
   .nota{
     position:relative;
-    margin:26px auto 6px;max-width:33ch;text-align:left;
+    max-width:33ch;text-align:left;
     background:
       repeating-linear-gradient(0deg, rgba(46,39,24,.05) 0 1px, transparent 1px 26px),
       var(--papel);
@@ -429,9 +452,7 @@
 </head>
 <body>
 <div class="app" id="app">
-  <div class="cielo" id="cielo">
-    <div class="luna" aria-hidden="true"><i></i><i></i><i></i></div>
-  </div>
+  <div class="cielo" id="cielo"></div>
   <div class="luciernagas" id="luciernagas" aria-hidden="true"></div>
 
   <header>
@@ -448,6 +469,7 @@
   <svg class="greca" preserveAspectRatio="none" aria-hidden="true"><rect width="100%" height="15" fill="url(#greca)"></rect></svg>
 
   <div class="escena">
+    <div class="luna" aria-hidden="true"><i></i><i></i><i></i></div>
     <svg class="pradera" viewBox="0 0 400 320" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
       <g id="jardin"></g>
     </svg>
@@ -486,9 +508,13 @@
   <footer>
     <p class="firma">Dicen que una flor amarilla se regala cuando quieres a alguien.<br>Yo te debía varias, Mirella.</p>
 
-    <button class="tirador" id="como" aria-expanded="false" aria-controls="nota">léeme</button>
+    <button class="tirador" id="como" aria-expanded="false" aria-controls="velo">léeme</button>
+  </footer>
+</div>
 
-    <div class="nota" id="nota" hidden>
+<div class="velo" id="velo" hidden>
+  <div class="hoja">
+    <div class="nota" id="nota" role="dialog" aria-modal="true" aria-label="Una nota para ti">
       <h2>Para que te la quedes</h2>
       <p>Si la guardas en tu pantalla, se abre como una app y funciona hasta sin internet.</p>
       <ol>
@@ -505,7 +531,8 @@
 
       <p class="pd">— y vuelve, ¿ya?</p>
     </div>
-  </footer>
+    <button class="tirador" id="cerrar">cerrar</button>
+  </div>
 </div>
 
 <script>
@@ -924,13 +951,19 @@
   riego.addEventListener("click", regar);
 
   var como = document.getElementById("como");
-  var nota = document.getElementById("nota");
-  como.addEventListener("click", function(){
-    var abrir = nota.hidden;
-    nota.hidden = !abrir;
+  var velo = document.getElementById("velo");
+  var cerrar = document.getElementById("cerrar");
+
+  function verNota(abrir){
+    velo.hidden = !abrir;
     como.setAttribute("aria-expanded", String(abrir));
-    como.textContent = abrir ? "cerrar la nota" : "léeme";
-    if (abrir) nota.scrollIntoView({behavior:"smooth", block:"nearest"});
+    if (abrir) cerrar.focus(); else como.focus();
+  }
+  como.addEventListener("click", function(){ verNota(true); });
+  cerrar.addEventListener("click", function(){ verNota(false); });
+  velo.addEventListener("click", function(e){ if (e.target === velo) verNota(false); });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape" && !velo.hidden) verNota(false);
   });
 
   RAMOS = ramosDe(total);

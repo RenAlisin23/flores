@@ -1,5 +1,5 @@
 /* Service worker: deja que las flores abran sin internet. */
-var CACHE = "flores-v9";
+var CACHE = "flores-v10";
 var BASE = [
   "./",
   "index.html",
