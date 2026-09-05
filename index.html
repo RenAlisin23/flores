@@ -602,6 +602,24 @@
   } catch(e){}
   if (!riegoTs) riegoTs = Date.now();
 
+  // Puertas traseras para Renzo, invisibles para quien solo abre el enlace:
+  //   ?cero        deja el jardín en blanco
+  //   ?flores=25   lo deja con ese número
+  // Después se limpia la dirección, para que al recargar no se repita.
+  (function ajusteManual(){
+    var q = location.search;
+    if (!q) return;
+    var tocado = false;
+    if (/[?&]cero(=|&|$)/.test(q)){ total = 0; tocado = true; }
+    var m = q.match(/[?&]flores=(\d{1,6})/);
+    if (m){ total = parseInt(m[1], 10) || 0; tocado = true; }
+    if (!tocado) return;
+    riegoTs = Date.now();
+    try { localStorage.setItem(CLAVE, JSON.stringify({flores: total, riego: riegoTs})); } catch(e){}
+    try { localStorage.removeItem(CLAVE_VIEJA); } catch(e){}
+    if (history.replaceState) history.replaceState(null, "", location.pathname);
+  })();
+
   function guardar(){
     try { localStorage.setItem(CLAVE, JSON.stringify({flores: total, riego: riegoTs})); } catch(e){}
   }
