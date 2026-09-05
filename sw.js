@@ -1,5 +1,5 @@
 /* Service worker: deja que las flores abran sin internet. */
-var CACHE = "flores-v5";
+var CACHE = "flores-v6";
 var BASE = [
   "./",
   "index.html",
@@ -46,7 +46,8 @@ self.addEventListener("fetch", function (e) {
   // La página: red primero (para recibir cambios), caché si no hay señal.
   if (req.mode === "navigate") {
     e.respondWith(
-      fetch(req).then(function (res) {
+      // no-cache: revalida siempre, para que una version nueva llegue enseguida
+      fetch(req, { cache: "no-cache" }).then(function (res) {
         var copia = res.clone();
         caches.open(CACHE).then(function (c) { c.put("index.html", copia); });
         return res;
