@@ -195,7 +195,8 @@
   @keyframes brotar{0%{transform:scale(.02,.04)}62%{transform:scale(1.09,1.05)}100%{transform:scale(1)}}
   #jardin.bebe .brote{animation:estirar 1.1s cubic-bezier(.3,1.4,.4,1)}
   @keyframes estirar{0%{transform:scaleY(1)}34%{transform:scaleY(1.13) scaleX(.95)}100%{transform:scaleY(1)}}
-  .fantasma{opacity:.16}
+  /* flores que todavia no existen: siluetas de luz de luna, no flores secas */
+  .fantasma{opacity:.15;filter:grayscale(.85) brightness(2.1)}
 
   .tallo{fill:none;stroke:var(--hoja);stroke-width:3;stroke-linecap:round}
   .hoja{fill:var(--hoja);stroke:var(--tinta);stroke-width:1.1;stroke-linejoin:round}
