@@ -119,6 +119,29 @@
   }
   @keyframes parpadeo{0%,100%{opacity:.05}42%{opacity:1}62%{opacity:.25}}
 
+  /* ---------- ramos atados ---------- */
+  .ramos{
+    position:relative;z-index:2;flex:none;
+    display:flex;flex-direction:column;align-items:center;gap:5px;
+    padding:0 20px 10px;
+  }
+  .atados{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:8px}
+  .ramito{width:22px;height:27px;flex:none;filter:drop-shadow(0 2px 4px rgba(4,8,26,.6))}
+  .ramito.recien{animation:atar .75s cubic-bezier(.2,1.5,.4,1) both}
+  @keyframes atar{
+    0%{transform:scale(.2) rotate(-16deg);opacity:0}
+    62%{transform:scale(1.16) rotate(5deg);opacity:1}
+    100%{transform:scale(1) rotate(0);opacity:1}
+  }
+  .mas{
+    font-family:"Yeseva One",Georgia,serif;font-size:13px;
+    color:var(--marigold);align-self:center;padding-bottom:3px;
+  }
+  .ramos-txt{
+    margin:0;font-size:10px;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--crema-tenue);
+  }
+
   /* ---------- greca ---------- */
   .greca{display:block;width:100%;height:15px;position:relative;z-index:2;flex:none}
 
@@ -416,6 +439,11 @@
     <span class="rotulo" id="rotulo">flores <em>amarillas</em></span>
   </header>
 
+  <div class="ramos" id="ramos" hidden>
+    <div class="atados" id="atados"></div>
+    <p class="ramos-txt" id="ramosTxt"></p>
+  </div>
+
   <svg class="greca" preserveAspectRatio="none" aria-hidden="true"><rect width="100%" height="15" fill="url(#greca)"></rect></svg>
 
   <div class="escena">
@@ -468,7 +496,8 @@
       </ol>
 
       <h2 class="otra">Cómo se cuidan</h2>
-      <p>La <b>flor</b> planta una nueva. La <b>gota</b> les echa aguita: se estiran y salen luciérnagas. Si pasan días sin agua se agachan un poco, pero con un toque vuelven. Ninguna se pierde.</p>
+      <p>La <b>flor</b> planta una nueva. La <b>gota</b> les echa aguita: se estiran y salen luciérnagas. Si pasan días sin agua se agachan un poco, pero con un toque vuelven.</p>
+      <p>Cuando el prado se llena (son 120), esas flores <b>se atan en un ramo</b> que se queda arriba, y empieza uno nuevo. Ninguna se pierde: el número de arriba las cuenta todas.</p>
 
       <h2 class="otra">Si algún día la quitas</h2>
       <p>Mantén pulsado el ícono y dale a <b>Eliminar</b> (en iPhone dice <b>Eliminar marcador</b>). Se va como cualquier app, sin dejar nada. Tus flores siguen guardadas por si vuelves.</p>
@@ -483,15 +512,19 @@
   "use strict";
   var CLAVE = "ramo-amarillo-v2";
   var CLAVE_VIEJA = "ramo-amarillo-v1";
-  var MAX_VISIBLES = 120;
+  var MAX_PRADO = 120;              // cuando el prado se llena, se ata en un ramo
   var SEQUIA = 72 * 3600 * 1000;
   var AUREO = 0.6180339887498949;
-  var FILAS = 2, FACTOR = 1;
+  var FILAS = 2, FACTOR = 1, RAMOS = 0;
+
+  // ramos ya atados y flores del prado de ahora (1..120)
+  function ramosDe(n){ return n === 0 ? 0 : Math.floor((n - 1) / MAX_PRADO); }
+  function enPrado(){ return total === 0 ? 0 : total - RAMOS * MAX_PRADO; }
 
   // El prado gana filas y las flores encogen a medida que son mas,
   // para que cada flor nueva tenga su propio sitio visible.
   function calcularDisposicion(){
-    var n = Math.min(total, MAX_VISIBLES);
+    var n = enPrado();
     var f = n <= 8 ? 2 : n <= 24 ? 3 : n <= 48 ? 4 : 5;
     var e = n <= 10 ? 1 : n <= 24 ? 0.86 : n <= 48 ? 0.74 : n <= 80 ? 0.64 : 0.56;
     var cambio = (f !== FILAS || e !== FACTOR);
@@ -508,6 +541,9 @@
   var riego = document.getElementById("riego");
   var lluvia = document.getElementById("lluvia");
   var app = document.getElementById("app");
+  var ramosEl = document.getElementById("ramos");
+  var atadosEl = document.getElementById("atados");
+  var ramosTxtEl = document.getElementById("ramosTxt");
 
   var razones = [
     "Por cómo te ríes cuando algo te sale mal.",
@@ -581,8 +617,11 @@
 
   function marcaFlor(i, opciones){
     var r1 = azar(i,1), r2 = azar(i,2), r3 = azar(i,3), r4 = azar(i,4), r5 = azar(i,5);
-    var banda = i % FILAS;
-    var puesto = Math.floor(i / FILAS);
+    // el sitio se calcula con el numero dentro del prado actual;
+    // la forma y el color siguen atados al numero de flor de siempre
+    var local = i - RAMOS * MAX_PRADO;
+    var banda = local % FILAS;
+    var puesto = Math.floor(local / FILAS);
     // sucesion aurea: cada flor nueva cae en el hueco mas grande que queda
     var hueco = ((puesto + 1) * AUREO + banda * 0.37) % 1;
     var x = 24 + hueco * 352 + (r1 - 0.5) * 13;
@@ -635,21 +674,21 @@
 
   function sembrarTodo(){
     calcularDisposicion();
-    var html = "", f, i, banda;
+    var html = "", f, i, banda, desde = RAMOS * MAX_PRADO;
     if (total === 0){
       for (f = 0; f < 6; f++) html += marcaFlor(f * 3 + 1, {fantasma:true});
     } else {
       // de atras hacia adelante, para que las cercanas tapen a las del fondo
       for (banda = 0; banda < FILAS; banda++)
-        for (i = Math.max(0, total - MAX_VISIBLES); i < total; i++)
-          if (i % FILAS === banda) html += marcaFlor(i, {});
+        for (i = desde; i < total; i++)
+          if ((i - desde) % FILAS === banda) html += marcaFlor(i, {});
     }
     jardin.innerHTML = html;
   }
 
   // coloca una flor nueva respetando la profundidad de su fila
   function plantarNodo(i){
-    var banda = i % FILAS, ref = null, hijos = jardin.children, j;
+    var banda = (i - RAMOS * MAX_PRADO) % FILAS, ref = null, hijos = jardin.children, j;
     for (j = 0; j < hijos.length; j++){
       if (+hijos[j].getAttribute("data-banda") > banda){ ref = hijos[j]; break; }
     }
@@ -660,7 +699,7 @@
   }
 
   function podar(){
-    while (jardin.children.length > MAX_VISIBLES){
+    while (jardin.children.length > MAX_PRADO){
       var vieja = jardin.children[0], j;
       for (j = 1; j < jardin.children.length; j++){
         if (+jardin.children[j].getAttribute("data-i") < +vieja.getAttribute("data-i"))
@@ -673,6 +712,37 @@
   function actualizarCuenta(){
     numeroEl.textContent = total.toLocaleString("es");
     rotuloEl.innerHTML = total === 1 ? 'flor <em>amarilla</em>' : 'flores <em>amarillas</em>';
+  }
+
+  // un ramito dibujado: tres flores atadas con una cinta
+  function marcaRamito(tono, recien){
+    var colores = ["#FFC931", "#FFD65C", "#FFB01F"];
+    var cabezas = "", cabeza = [[-5.5,-2],[0,-4.8],[5.5,-2]], k, p, ang;
+    for (k = 0; k < 3; k++){
+      var cx = cabeza[k][0], cy = cabeza[k][1], col = colores[(tono + k) % 3];
+      for (p = 0; p < 5; p++){
+        ang = p * 72 * Math.PI / 180;
+        cabezas += '<circle cx="' + (cx + 2.5 * Math.cos(ang)).toFixed(2) +
+                   '" cy="' + (cy + 2.5 * Math.sin(ang)).toFixed(2) +
+                   '" r="1.75" fill="' + col + '" stroke="#04081A" stroke-width=".5"></circle>';
+      }
+      cabezas += '<circle cx="' + cx + '" cy="' + cy + '" r="1.3" fill="#8A4415"></circle>';
+    }
+    return '<svg class="ramito' + (recien ? " recien" : "") + '" viewBox="-12 -15 24 30" aria-hidden="true">' +
+      '<path d="M0 12 L-5.5 -1 M0 12 L0 -3.5 M0 12 L5.5 -1" fill="none" stroke="#3E9A73" ' +
+      'stroke-width="1.5" stroke-linecap="round"></path>' + cabezas +
+      '<path d="M-3.6 7.5 h7.2" stroke="#FF6B6B" stroke-width="2.6" stroke-linecap="round"></path></svg>';
+  }
+
+  function pintarRamos(animar){
+    if (RAMOS === 0){ ramosEl.hidden = true; return; }
+    ramosEl.hidden = false;
+    var visibles = Math.min(RAMOS, 12), html = "", r;
+    for (r = RAMOS - visibles; r < RAMOS; r++)
+      html += marcaRamito(r % 3, animar && r === RAMOS - 1);
+    if (RAMOS > 12) html = '<span class="mas">+' + (RAMOS - 12) + '</span>' + html;
+    atadosEl.innerHTML = html;
+    ramosTxtEl.textContent = RAMOS === 1 ? "un ramo atado" : RAMOS + " ramos atados";
   }
 
   function haceCuanto(ms){
@@ -747,8 +817,12 @@
     if (eraPrimera) riegoTs = Date.now();
     guardar();
 
+    var ramosAntes = RAMOS;
+    RAMOS = ramosDe(total);
+    var ramoNuevo = RAMOS > ramosAntes;
+
     // si el prado cambia de filas o de tamaño, se redibuja entero
-    if (eraPrimera || calcularDisposicion()){
+    if (eraPrimera || ramoNuevo || calcularDisposicion()){
       sembrarTodo();
       var recien = jardin.querySelector('[data-i="' + (total - 1) + '"]');
       if (recien) recien.classList.add("brota");
@@ -758,10 +832,15 @@
     }
 
     actualizarCuenta();
+    pintarRamos(ramoNuevo);
     pintarEstado();
-    decir(hitos[total] || razones[(total - 1) % razones.length], !!hitos[total]);
+    if (ramoNuevo){
+      decir("Ese jardín ya está lleno. Lo ato en un ramo y empezamos otro.", true);
+    } else {
+      decir(hitos[total] || razones[(total - 1) % razones.length], !!hitos[total]);
+    }
     soltarPetalos();
-    if (navigator.vibrate) { try { navigator.vibrate(12); } catch(e){} }
+    if (navigator.vibrate) { try { navigator.vibrate(ramoNuevo ? [10, 50, 10, 50, 14] : 12); } catch(e){} }
   }
 
   function regar(){
@@ -835,8 +914,10 @@
     if (abrir) nota.scrollIntoView({behavior:"smooth", block:"nearest"});
   });
 
+  RAMOS = ramosDe(total);
   sembrarTodo();
   actualizarCuenta();
+  pintarRamos(false);
   pintarEstado();
   setInterval(pintarEstado, 60000);
   if (total > 0){
